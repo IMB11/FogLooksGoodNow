@@ -71,7 +71,7 @@ public class FogManager {
         this.caveFogMultiplier = FLG.CONFIG.caveFogDensity();
         this.configMap = new HashMap<>();
 
-        Vec3 caveFogColor = Vec3.fromRGB24(FLG.CONFIG.caveFogColor().rgb());
+        Vec3 caveFogColor = Vec3.fromRGB24(FLG.CONFIG.caveFogColor());
         this.caveFogColors[0].setDefaultValue(caveFogColor.x);
         this.caveFogColors[1].setDefaultValue(caveFogColor.y);
         this.caveFogColors[2].setDefaultValue(caveFogColor.z);

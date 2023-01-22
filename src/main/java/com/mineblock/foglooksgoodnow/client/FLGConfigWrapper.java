@@ -12,19 +12,19 @@ import java.util.List;
 
 public class FLGConfigWrapper {
     @ExcludeFromScreen
-    @RestartRequired
+    @Hook
     public List<Pair<String, FogManager.BiomeFogDensity>> biomeFogs = new ArrayList<>();
     @RangeConstraint(min = 0, max = 1)
-    @RestartRequired
+    @Hook
     public double defaultFogStart = 0.0D;
     @RangeConstraint(min = 0, max = 1)
-    @RestartRequired
+    @Hook
     public double defaultFogDensity = 1.0D;
-    @RestartRequired
+    @Hook
     public boolean useCaveFog = true;
     @RangeConstraint(min = 0, max = 1)
-    @RestartRequired
+    @Hook
     public double caveFogDensity = 0.8D;
-    @RestartRequired
-    public Color caveFogColor = new Color(0.2f, 0.2f, 0.2f, 0.25f);
+    @Hook
+    public int caveFogColor = 3355443;
 }

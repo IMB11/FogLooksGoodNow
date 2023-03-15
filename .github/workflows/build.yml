@@ -15,6 +15,9 @@ jobs:
         uses: actions/checkout@v3
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
+      - uses: burrunan/gradle-cache-action@v1
+        with:
+          gradle-distribution-sha-256-sum-warning: false
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
@@ -26,11 +29,11 @@ jobs:
           echo $'\nmineblockMavenUsername=mineblock11' >> gradle.properties
           echo mineblockMavenPassword=$MAVEN_PASSWORD >> gradle.properties
       - name: Clean Build
-        run: ./gradlew clean build --no-daemon
+        run: ./gradlew clean build publish --no-daemon
       - uses: Kir-Antipov/mc-publish@v3.2
         with:
           modrinth-id: ${{ vars.MODRINTH_ID }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           curseforge-id: ${{ vars.CURSEFORGE_ID }}
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.CLASSIC_GITHUB_TOKEN }}

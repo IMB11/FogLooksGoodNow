@@ -1,0 +1,36 @@
+name: Upload release assets
+
+on:
+  release:
+    types: [published]
+
+env:
+  MAVEN_PASSWORD: ${{ secrets.MAVEN_TOKEN }}
+
+jobs:
+  upload_asset:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          cache: gradle
+          java-version: 17
+      - run: chmod +x gradlew
+      - run: |
+          echo mineblockMavenUsername=mineblock11 >> gradle.properties
+          echo mineblockMavenPassword=$MAVEN_PASSWORD >> gradle.properties
+      - name: Clean Build
+        run: ./gradlew clean build --no-daemon
+      - uses: Kir-Antipov/mc-publish@v3.2
+        with:
+          modrinth-id: ${{ vars.MODRINTH_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          curseforge-id: ${{ vars.CURSEFORGE_ID }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}

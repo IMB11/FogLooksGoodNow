@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.0-SNAPSHOT'
+    id 'fabric-loom' version '1.1-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -24,13 +24,13 @@ dependencies {
         officialMojangMappings()
         parchment("org.parchmentmc.data:parchment-1.19.2:2022.11.27@zip")
     }
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:porting-lib:2.1.708+1.19.2"))
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:porting-lib:${project.porting_lib_version}"))
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation(include("io.wispforest:owo-lib:0.9.3+1.19"))
-    modRuntimeOnly "com.terraformersmc:modmenu:4.1.2"
-    annotationProcessor "io.wispforest:owo-lib:0.9.3+1.19"
+    modImplementation(include("io.wispforest:owo-lib:${project.owo_version}"))
+    modRuntimeOnly "com.terraformersmc:modmenu:${project.mod_menu_version}"
+    annotationProcessor "io.wispforest:owo-lib:${project.owo_version}"
 }
 
 processResources {
@@ -72,7 +72,6 @@ jar {
     }
 }
 
-// configure the maven publication
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -82,9 +81,10 @@ publishing {
 
     // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
+        maven {
+            name = "mineblockMaven"
+            url = "https://maven.mineblock11.dev/releases"
+            credentials(PasswordCredentials)
+        }
     }
 }

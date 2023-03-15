@@ -23,7 +23,7 @@ jobs:
           java-version: 17
       - run: chmod +x gradlew
       - run: |
-          echo mineblockMavenUsername=mineblock11 >> gradle.properties
+          echo $'\nmineblockMavenUsername=mineblock11' >> gradle.properties
           echo mineblockMavenPassword=$MAVEN_PASSWORD >> gradle.properties
       - name: Clean Build
         run: ./gradlew clean build --no-daemon

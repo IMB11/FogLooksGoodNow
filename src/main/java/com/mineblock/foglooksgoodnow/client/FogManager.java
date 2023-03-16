@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -85,7 +86,7 @@ public class FogManager {
     public void tick() {
         BlockPos pos = this.mc.gameRenderer.getMainCamera().getBlockPosition();
         Biome biome = this.mc.level.getBiome(pos).value();
-        ResourceLocation key = this.mc.level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(biome);
+        ResourceLocation key = this.mc.level.registryAccess().registryOrThrow(Registries.BIOME).getKey(biome);
         if (key == null)
             return;
 

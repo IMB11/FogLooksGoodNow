@@ -13,7 +13,8 @@ import java.util.List;
 public class FLGConfigWrapper {
     @ExcludeFromScreen
     @Hook
-    public List<Pair<String, FogManager.BiomeFogDensity>> biomeFogs = new ArrayList<>();
+    public List<Pair<String, FogManager.BiomeFogDensity>> biomeFogs = List.of(new Pair<>("minecraft:the_end", new FogManager.BiomeFogDensity(0.5f, 0.8f, 3355443)));
+
     @RangeConstraint(min = 0, max = 1)
     @Hook
     public double defaultFogStart = 0.0D;

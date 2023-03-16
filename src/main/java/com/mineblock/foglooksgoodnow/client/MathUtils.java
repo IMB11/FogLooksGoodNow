@@ -1,12 +1,12 @@
 package com.mineblock.foglooksgoodnow.client;
 
 import com.ibm.icu.impl.Pair;
-import com.mojang.math.Vector3f;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;

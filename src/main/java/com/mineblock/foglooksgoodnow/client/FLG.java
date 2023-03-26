@@ -53,5 +53,7 @@ public class FLG implements ClientModInitializer {
         CONFIG.subscribeToUseCaveFog(col -> FogManager.getDensityManagerOptional().ifPresent((fogDensityManager -> fogDensityManager.initializeConfig())));
         CONFIG.subscribeToDefaultFogDensity(col -> FogManager.getDensityManagerOptional().ifPresent((fogDensityManager -> fogDensityManager.initializeConfig())));
         CONFIG.subscribeToDefaultFogStart(col -> FogManager.getDensityManagerOptional().ifPresent((fogDensityManager -> fogDensityManager.initializeConfig())));
+
+        FogManager.getDensityManagerOptional().ifPresent((fogDensityManager -> fogDensityManager.initializeConfig()));
     }
 }

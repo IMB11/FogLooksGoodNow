@@ -17,6 +17,10 @@ repositories {
     maven { url "https://maven.terraformersmc.com/releases" }
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/flg.accesswidener")
+}
+
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -26,7 +30,6 @@ dependencies {
     }
 
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:base:${project.porting_lib_version}"))
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation(include("io.wispforest:owo-lib:${project.owo_version}"))
     modRuntimeOnly "com.terraformersmc:modmenu:${project.mod_menu_version}"

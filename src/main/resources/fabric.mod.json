@@ -3,6 +3,7 @@
   "id": "fog-looks-good-now",
   "version": "${version}",
   "name": "FogLooksGoodNow",
+  "accessWidener": "flg.accesswidener",
   "description": "Fabric port of Fog Looks Good Now",
   "authors": [
     "mineblock11",

@@ -1,17 +1,16 @@
-package com.mineblock.foglooksgoodnow.client;
+package com.mineblock11.foglooksgoodnow.client;
 
 import com.ibm.icu.impl.Pair;
-import net.minecraft.Util;
-import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.function.Function;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
 /* cappin's math utils
  * hope you find this useful :) */
@@ -27,15 +26,15 @@ public class MathUtils {
     }
     public static float arccos(float pValue) { return (float) ((arcsin(pValue) * -1) + (Math.PI / 2));}
 
-    public static Vec3 vec3Lerp(float delta, Vec3 start, Vec3 end) {
-        return new Vec3(Mth.lerp(delta, start.x(), end.x()), Mth.lerp(delta, start.y(), end.y()), Mth.lerp(delta, start.z(), end.z()));
+    public static Vec3d vec3Lerp(float delta, Vec3d start, Vec3d end) {
+        return new Vec3d(MathHelper.lerp(delta, start.getX(), end.getX()), MathHelper.lerp(delta, start.getY(), end.getY()), MathHelper.lerp(delta, start.getZ(), end.getZ()));
     }
 
-    public static Vec3 vec3Lerp(double delta, Vec3 start, Vec3 end) {
-        return new Vec3(Mth.lerp(delta, start.x(), end.x()), Mth.lerp(delta, start.y(), end.y()), Mth.lerp(delta, start.z(), end.z()));
+    public static Vec3d vec3Lerp(double delta, Vec3d start, Vec3d end) {
+        return new Vec3d(MathHelper.lerp(delta, start.getX(), end.getX()), MathHelper.lerp(delta, start.getY(), end.getY()), MathHelper.lerp(delta, start.getZ(), end.getZ()));
     }
 
-    public static Vec3 rotateVectorY(Vec3 vector, float rotation) {
+    public static Vec3d rotateVectorY(Vec3d vector, float rotation) {
         /*Vec3 nV = vector.normalize();
         double currentAngle = Mth.atan2(nV.z, nV.x);
         double currentRadius = vector.multiply(1, 0, 1).length();
@@ -43,7 +42,7 @@ public class MathUtils {
         double z = Mth.cos((float) currentAngle + rotation) * currentRadius;
 
         return new Vec3(x, vector.y, z);*/
-        return new Vec3(vector.x * Math.cos(rotation) - vector.z * Math.sin(rotation), vector.y, vector.z * Math.cos(rotation) + vector.x * Math.sin(rotation));
+        return new Vec3d(vector.x * Math.cos(rotation) - vector.z * Math.sin(rotation), vector.y, vector.z * Math.cos(rotation) + vector.x * Math.sin(rotation));
     }
 
 
@@ -140,7 +139,7 @@ public class MathUtils {
     public static float getRandomFloatBetween (Random rand, float min, float max) {
         return mapRange(0, 1, min, max, rand.nextFloat());
     }
-    public static float getRandomFloatBetween (RandomSource rand, float min, float max) {
+    public static float getRandomFloatBetween (net.minecraft.util.math.random.Random rand, float min, float max) {
         return mapRange(0, 1, min, max, rand.nextFloat());
     }
 
@@ -151,20 +150,20 @@ public class MathUtils {
         return value * (max - min) + min;
     }
 
-    public static Vec3 adjustAxis(Vec3 vector, double desiredLength, Direction.Axis axis) {
+    public static Vec3d adjustAxis(Vec3d vector, double desiredLength, Direction.Axis axis) {
         double lSqr = desiredLength * desiredLength;
         switch (axis) {
             case X:
-                return new Vec3(Math.sqrt(lSqr + (-1 * vector.y() * vector.y()) + (-1 * vector.z() * vector.z())), vector.y(), vector.z());
+                return new Vec3d(Math.sqrt(lSqr + (-1 * vector.getY() * vector.getY()) + (-1 * vector.getZ() * vector.getZ())), vector.getY(), vector.getZ());
             case Y:
-                return new Vec3(vector.x(), Math.sqrt(lSqr + (-1 * vector.x() * vector.x()) + (-1 * vector.z() * vector.z())), vector.z());
+                return new Vec3d(vector.getX(), Math.sqrt(lSqr + (-1 * vector.getX() * vector.getX()) + (-1 * vector.getZ() * vector.getZ())), vector.getZ());
             default:
-                return new Vec3(vector.x(), vector.y(), Math.sqrt(lSqr + (-1 * vector.x() * vector.x()) + (-1 * vector.y() * vector.y())));
+                return new Vec3d(vector.getX(), vector.getY(), Math.sqrt(lSqr + (-1 * vector.getX() * vector.getX()) + (-1 * vector.getY() * vector.getY())));
         }
     }
 
     public static float awfulRandom(float seed) {
-        return Mth.frac(Mth.sin((float) (seed * Math.tan(Mth.sqrt((float) Math.abs(seed - seed * 0.5F))))) * 100000.0F);
+        return MathHelper.fractionalPart(MathHelper.sin((float) (seed * Math.tan(MathHelper.sqrt((float) Math.abs(seed - seed * 0.5F))))) * 100000.0F);
     }
 
     /**
@@ -187,7 +186,7 @@ public class MathUtils {
         float secondTerraceThreshold = Math.abs(terraceThreshold - 1);
         boolean isTerrace = s >= terraceThreshold || s <= secondTerraceThreshold;
 
-        return Pair.of(Mth.lerp(erosion,(k + s) * terraceWidth, height), isTerrace);
+        return Pair.of(MathHelper.lerp(erosion,(k + s) * terraceWidth, height), isTerrace);
     }
 
     /**
@@ -207,9 +206,9 @@ public class MathUtils {
         float f = (height - k * terraceWidth) / terraceWidth;
         float s = Math.min(2.0f * f, 1.0f);
 
-        float terraceMultiplier = Mth.clamp(MathUtils.invert(Math.abs(s - 1.0F)), 0.0F, 1.0F);
+        float terraceMultiplier = MathHelper.clamp(MathUtils.invert(Math.abs(s - 1.0F)), 0.0F, 1.0F);
 
-        return Pair.of(Mth.lerp(erosion,(k + s) * terraceWidth, height), terraceMultiplier);
+        return Pair.of(MathHelper.lerp(erosion,(k + s) * terraceWidth, height), terraceMultiplier);
     }
 
     /**
@@ -229,9 +228,9 @@ public class MathUtils {
         double f = (height - k * terraceWidth) / terraceWidth;
         double s = Math.min(2.0f * f, 1.0f);
 
-        double terraceMultiplier = Mth.clamp(MathUtils.invert(Math.abs(s - 1.0F)), 0.0F, 1.0F);
+        double terraceMultiplier = MathHelper.clamp(MathUtils.invert(Math.abs(s - 1.0F)), 0.0F, 1.0F);
 
-        return Pair.of(Mth.lerp(erosion,(k + s) * terraceWidth, height), terraceMultiplier);
+        return Pair.of(MathHelper.lerp(erosion,(k + s) * terraceWidth, height), terraceMultiplier);
     }
 
     /**
@@ -284,7 +283,7 @@ public class MathUtils {
 
 
     public static float minMaxSin (float value, float min, float max) {
-        return (((Mth.sin(value) + 1) * 0.5F) * (max - min)) + min;
+        return (((MathHelper.sin(value) + 1) * 0.5F) * (max - min)) + min;
     }
 
     public static float fastSin (float value) {
@@ -462,7 +461,7 @@ public class MathUtils {
         return (float) Math.pow(dx * dx + dy * dy + dz * dz, 1/3);
     }
 
-    public static Vec3 cubeNormalize(Vec3 input) {
+    public static Vec3d cubeNormalize(Vec3d input) {
         double divisor = 1 / Math.max(Math.max(Math.abs(input.x), Math.abs(input.y)),  Math.abs(input.z));
         return input.multiply(divisor, divisor, divisor);
     }
@@ -539,17 +538,17 @@ public class MathUtils {
         },
         easeInSine {
             public float ease(float x) {
-                return 1 - Mth.cos((float) ((x * Math.PI) / 2));
+                return 1 - MathHelper.cos((float) ((x * Math.PI) / 2));
             }
         },
         easeOutSine {
             public float ease(float x) {
-                return Mth.sin((float) ((x * Math.PI) / 2));
+                return MathHelper.sin((float) ((x * Math.PI) / 2));
             }
         },
         easeInOutSine {
             public float ease(float x) {
-                return -(Mth.cos((float) (Math.PI * x)) - 1) / 2;
+                return -(MathHelper.cos((float) (Math.PI * x)) - 1) / 2;
             }
         },
         easeInExpo {
@@ -611,7 +610,7 @@ public class MathUtils {
                         ? 0
                         : (float) (x == 1
                         ? 1
-                        : -Math.pow(2, 10 * x - 10) * Mth.sin((float) ((x * 10 - 10.75) * ((2 * Math.PI) / 3))));
+                        : -Math.pow(2, 10 * x - 10) * MathHelper.sin((float) ((x * 10 - 10.75) * ((2 * Math.PI) / 3))));
             }
         },
         easeOutElastic {
@@ -620,7 +619,7 @@ public class MathUtils {
                         ? 0
                         : (float) (x == 1
                         ? 1
-                        : Math.pow(2, -10 * x) * Mth.sin((float) ((x * 10 - 0.75) * ((2 * Math.PI) / 3))) + 1);
+                        : Math.pow(2, -10 * x) * MathHelper.sin((float) ((x * 10 - 0.75) * ((2 * Math.PI) / 3))) + 1);
             }
         },
         easeInOutElastic {
@@ -630,8 +629,8 @@ public class MathUtils {
                         : (float) (x == 1
                         ? 1
                         : x < 0.5
-                        ? -(Math.pow(2, 20 * x - 10) * Mth.sin((float) ((20 * x - 11.125) * ((2 * Math.PI) / 4.5)))) / 2
-                        : (Math.pow(2, -20 * x + 10) * Mth.sin((float) ((20 * x - 11.125) * ((2 * Math.PI) / 4.5)))) / 2 + 1);
+                        ? -(Math.pow(2, 20 * x - 10) * MathHelper.sin((float) ((20 * x - 11.125) * ((2 * Math.PI) / 4.5)))) / 2
+                        : (Math.pow(2, -20 * x + 10) * MathHelper.sin((float) ((20 * x - 11.125) * ((2 * Math.PI) / 4.5)))) / 2 + 1);
             }
         },
         easeInBounce {
@@ -673,15 +672,15 @@ public class MathUtils {
     }
 
     public static float triLerp(Vector3f pct, float cAAA, float cAAB, float cABA, float cABB, float cBAA, float cBAB, float cBBA, float cBBB) {
-        float cAA = Mth.lerp(pct.x(), cAAA, cBAA);
-        float cAB = Mth.lerp(pct.x(), cAAB, cBAB);
-        float cBB = Mth.lerp(pct.x(), cABB, cBBB);
-        float cBA = Mth.lerp(pct.x(), cABA, cBBA);
+        float cAA = MathHelper.lerp(pct.x(), cAAA, cBAA);
+        float cAB = MathHelper.lerp(pct.x(), cAAB, cBAB);
+        float cBB = MathHelper.lerp(pct.x(), cABB, cBBB);
+        float cBA = MathHelper.lerp(pct.x(), cABA, cBBA);
         
-        float cA = Mth.lerp(pct.z(), cAA, cBA);
-        float cB = Mth.lerp(pct.z(), cAB, cBB);
+        float cA = MathHelper.lerp(pct.z(), cAA, cBA);
+        float cB = MathHelper.lerp(pct.z(), cAB, cBB);
         
-        float c = Mth.lerp(pct.y(), cA, cB);
+        float c = MathHelper.lerp(pct.y(), cA, cB);
         
         return c;
     }
@@ -726,7 +725,7 @@ public class MathUtils {
 
     public Vector3f getBlackbodyColor(double temperature) {
         // Temperature must fit between 1000 and 40000 degrees. I recommend you set the range between 1500 and 15000.
-        temperature = Mth.clamp(temperature, 1000, 40000);
+        temperature = MathHelper.clamp(temperature, 1000, 40000);
         temperature /= 100;
 
         float red, green, blue;
@@ -735,20 +734,20 @@ public class MathUtils {
         if (temperature <= 66) red = 255;
         else {
             red = (float) (329.698727446 * (Math.pow(temperature - 60, -0.1332047592)));
-            red = Mth.clamp(red, 0, 255);
+            red = MathHelper.clamp(red, 0, 255);
         }
 
         // Green
         if (temperature <= 66) green = (float) (99.4708025861 * Math.log(temperature) - 161.1195681661);
         else green = (float) (288.1221695283 * (Math.pow(temperature - 60, -0.0755148492)));
-        green = Mth.clamp(green, 0, 255);
+        green = MathHelper.clamp(green, 0, 255);
 
         // Blue
         if (temperature >= 66) blue = 255;
         else if (temperature <= 19) blue = 0;
         else {
             blue = (float) (138.5177312231 * Math.log(temperature - 10) - 305.0447927307);
-            blue = Mth.clamp(blue, 0, 255);
+            blue = MathHelper.clamp(blue, 0, 255);
         }
 
         return new Vector3f(red, green, blue);

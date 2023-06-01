@@ -1,19 +1,19 @@
-package com.mineblock.foglooksgoodnow.client.mixin;
+package com.mineblock11.foglooksgoodnow.client.mixin;
 
-import com.mineblock.foglooksgoodnow.client.FLG;
-import com.mineblock.foglooksgoodnow.client.FogManager;
-import com.mineblock.foglooksgoodnow.client.FoggySkyRenderer;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
+import com.mineblock11.foglooksgoodnow.client.FLG;
+import com.mineblock11.foglooksgoodnow.client.FogManager;
+import com.mineblock11.foglooksgoodnow.client.FoggySkyRenderer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(LevelRenderer.class)
+@Mixin(WorldRenderer.class)
 public class LevelRendererMixin {
     @Inject(method = "<init>(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;Lnet/minecraft/client/renderer/blockentity/BlockEntityRenderDispatcher;Lnet/minecraft/client/renderer/RenderBuffers;)V", at = @At("TAIL"))
     private void init(CallbackInfo info) {
@@ -28,8 +28,8 @@ public class LevelRendererMixin {
     }
 
     @Inject(method = "renderSky", at = @At("TAIL"))
-    public void renderSky(PoseStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean isFoggy, Runnable setupFog, CallbackInfo ci) {
-        Minecraft mc = Minecraft.getInstance();
-        FoggySkyRenderer.renderSky(mc.level, partialTick, poseStack, camera, projectionMatrix, isFoggy, setupFog);
+    public void renderSky(MatrixStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean isFoggy, Runnable setupFog, CallbackInfo ci) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        FoggySkyRenderer.renderSky(mc.world, partialTick, poseStack, camera, projectionMatrix, isFoggy, setupFog);
     }
 }

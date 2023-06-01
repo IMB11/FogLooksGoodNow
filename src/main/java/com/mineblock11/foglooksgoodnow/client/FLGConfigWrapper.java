@@ -1,10 +1,8 @@
-package com.mineblock.foglooksgoodnow.client;
+package com.mineblock11.foglooksgoodnow.client;
 
 import com.mojang.datafixers.util.Pair;
 import io.wispforest.owo.config.annotation.*;
-import io.wispforest.owo.ui.core.Color;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Config(name = "fog-looks-good-now", wrapperName = "FLGConfig")

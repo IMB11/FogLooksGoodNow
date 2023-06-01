@@ -1,7 +1,7 @@
-package com.mineblock.foglooksgoodnow.client.mixin;
+package com.mineblock11.foglooksgoodnow.client.mixin;
 
-import com.mineblock.foglooksgoodnow.client.FogManager;
-import net.minecraft.client.renderer.GameRenderer;
+import com.mineblock11.foglooksgoodnow.client.FogManager;
+import net.minecraft.client.render.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -18,7 +18,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "com.mineblock.foglooksgoodnow.client.FLG"
+      "com.mineblock11.foglooksgoodnow.client.FLG"
     ]
   },
   "mixins": [

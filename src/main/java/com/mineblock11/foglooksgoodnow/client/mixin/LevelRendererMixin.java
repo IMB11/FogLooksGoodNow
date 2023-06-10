@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(WorldRenderer.class)
 public class LevelRendererMixin {
-    @Inject(method = "<init>(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;Lnet/minecraft/client/renderer/blockentity/BlockEntityRenderDispatcher;Lnet/minecraft/client/renderer/RenderBuffers;)V", at = @At("TAIL"))
+    @Inject(method = "<init>", at = @At("TAIL"))
     private void init(CallbackInfo info) {
         FogManager.densityManager = new FogManager();
         FLG.LOGGER.info("Initialized Density Manager");
@@ -27,7 +27,7 @@ public class LevelRendererMixin {
         FogManager.densityManager = null;
     }
 
-    @Inject(method = "renderSky", at = @At("TAIL"))
+    @Inject(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At("TAIL"))
     public void renderSky(MatrixStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean isFoggy, Runnable setupFog, CallbackInfo ci) {
         MinecraftClient mc = MinecraftClient.getInstance();
         FoggySkyRenderer.renderSky(mc.world, partialTick, poseStack, camera, projectionMatrix, isFoggy, setupFog);

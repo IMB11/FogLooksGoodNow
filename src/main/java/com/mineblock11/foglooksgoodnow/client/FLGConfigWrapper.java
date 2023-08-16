@@ -18,6 +18,9 @@ public class FLGConfigWrapper {
     public double defaultFogStart = 0.0D;
     @RangeConstraint(min = 0, max = 1)
     @Hook
+    public double defaultRainFogStart = 0.3D;
+    @RangeConstraint(min = 0, max = 1)
+    @Hook
     public double defaultFogDensity = 1.0D;
     @Hook
     public boolean useCaveFog = true;

@@ -2,6 +2,7 @@ package com.mineblock11.foglooksgoodnow.client.mixin;
 
 import com.mineblock11.foglooksgoodnow.client.FogManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.CameraSubmersionType;
@@ -12,6 +13,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
@@ -52,7 +54,7 @@ public class FogRendererMixin {
             }
 
             RenderSystem.setShaderFogStart(viewDistance * densityManager.fogStart.get(partialTick));
-            RenderSystem.setShaderFogEnd(viewDistance * densityManager.fogEnd.get(partialTick) * undergroundFogMultiplier);
+            RenderSystem.setShaderFogEnd(viewDistance * (densityManager.fogEnd.get(partialTick) * densityManager.fogRain.get(partialTick)) * undergroundFogMultiplier);
             RenderSystem.setShaderFogShape(FogShape.SPHERE);
         }
     }

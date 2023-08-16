@@ -36,6 +36,7 @@ public class FogManager {
     public InterpolatedValue currentSkyLight;
     public InterpolatedValue currentBlockLight;
     public InterpolatedValue currentLight;
+    public InterpolatedValue fogRain;
     public InterpolatedValue undergroundness;
     public InterpolatedValue darkness;
     public InterpolatedValue[] caveFogColors;
@@ -49,6 +50,7 @@ public class FogManager {
         this.mc = MinecraftClient.getInstance();
         this.fogStart = new InterpolatedValue(0.0F);
         this.fogEnd = new InterpolatedValue(1.0F);
+        this.fogRain = new InterpolatedValue(0.2F);
 
         this.currentSkyLight = new InterpolatedValue(16.0F);
         this.currentBlockLight = new InterpolatedValue(16.0F);
@@ -65,6 +67,7 @@ public class FogManager {
 
     public void initializeConfig() {
         FLG.LOGGER.info("Initialized Config Values");
+        this.fogRain.setDefaultValue(FLG.CONFIG.defaultRainFogStart());
         this.fogStart.setDefaultValue(FLG.CONFIG.defaultFogStart());
         this.fogEnd.setDefaultValue(FLG.CONFIG.defaultFogDensity());
         this.useCaveFog = FLG.CONFIG.useCaveFog();
@@ -94,6 +97,12 @@ public class FogManager {
         float density = isFogDense? 0.9F : 1.0F;
 
         float[] darknessAffectedFog;
+
+        if(mc.world.isRaining()){
+            this.fogRain.interpolate(this.fogRain.defaultValue);
+        }else{
+            this.fogRain.interpolate(1, 0.5f);
+        }
 
         if (currentDensity != null) {
             darknessAffectedFog = getDarknessEffectedFog(currentDensity.fogStart(), currentDensity.fogDensity() * density);

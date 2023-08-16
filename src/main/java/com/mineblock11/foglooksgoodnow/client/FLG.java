@@ -13,6 +13,7 @@ public class FLG implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
+        CONFIG.subscribeToDefaultRainFogStart(col -> FogManager.getDensityManagerOptional().ifPresent(FogManager::initializeConfig));
         CONFIG.subscribeToBiomeFogs(pairs -> FogManager.getDensityManagerOptional().ifPresent(FogManager::initializeConfig));
         CONFIG.subscribeToCaveFogColor(col -> FogManager.getDensityManagerOptional().ifPresent(FogManager::initializeConfig));
         CONFIG.subscribeToCaveFogDensity(col -> FogManager.getDensityManagerOptional().ifPresent(FogManager::initializeConfig));

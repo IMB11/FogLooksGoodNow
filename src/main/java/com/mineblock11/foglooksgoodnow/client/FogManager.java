@@ -101,7 +101,7 @@ public class FogManager {
         if(mc.world.isRaining()){
             this.fogRain.interpolate(this.fogRain.defaultValue);
         }else{
-            this.fogRain.interpolate(1, 0.5f);
+            this.fogRain.interpolate(1, 0.05f);
         }
 
         if (currentDensity != null) {

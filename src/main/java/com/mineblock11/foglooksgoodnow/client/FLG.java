@@ -21,6 +21,6 @@ public class FLG implements ClientModInitializer {
         CONFIG.subscribeToDefaultFogDensity(col -> FogManager.getDensityManagerOptional().ifPresent(FogManager::initializeConfig));
         CONFIG.subscribeToDefaultFogStart(col -> FogManager.getDensityManagerOptional().ifPresent(FogManager::initializeConfig));
 
-        FogManager.getDensityManagerOptional().ifPresent((fogDensityManager -> fogDensityManager.initializeConfig()));
+        FogManager.getDensityManagerOptional().ifPresent(FogManager::initializeConfig);
     }
 }

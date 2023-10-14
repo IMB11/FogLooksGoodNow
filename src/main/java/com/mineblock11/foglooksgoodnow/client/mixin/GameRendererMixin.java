@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GameRendererMixin {
     @Inject(method = "tick()V", at = @At("TAIL"))
     private void tick(CallbackInfo info) {
-        FogManager.getDensityManagerOptional().ifPresent((fogDensityManager -> fogDensityManager.tick()));
+        FogManager.getDensityManagerOptional().ifPresent(FogManager::tick);
     }
 }

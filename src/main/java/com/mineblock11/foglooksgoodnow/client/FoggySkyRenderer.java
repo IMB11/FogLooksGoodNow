@@ -1,5 +1,6 @@
 package com.mineblock11.foglooksgoodnow.client;
 
+import com.mineblock11.foglooksgoodnow.client.compat.IrisShadersCompat;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
@@ -18,7 +19,7 @@ import org.joml.Matrix4f;
 
 public class FoggySkyRenderer {
     public static void renderSky(ClientWorld level, float partialTick, MatrixStack poseStack, Camera camera, Matrix4f projectionMatrix, boolean isFoggy, Runnable setupFog) {
-        if (FogManager.shouldRenderCaveFog()) {
+        if (FogManager.shouldRenderCaveFog() && !IrisShadersCompat.isUsingShaders()) {
             FogManager densityManager = FogManager.getDensityManager();
             
             Vec3d fogColor = FogManager.getCaveFogColor();

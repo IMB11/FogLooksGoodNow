@@ -15,6 +15,17 @@ repositories {
         url = 'https://maven.parchmentmc.org'
     }
     maven { url "https://maven.terraformersmc.com/releases" }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 loom {
@@ -31,6 +42,13 @@ dependencies {
     modImplementation(include("io.wispforest:owo-lib:${project.owo_version}"))
     modRuntimeOnly "com.terraformersmc:modmenu:${project.mod_menu_version}"
     annotationProcessor "io.wispforest:owo-lib:${project.owo_version}"
+    // Iris & Sodium
+    modImplementation "maven.modrinth:sodium:${project.sodium_version}"
+    modImplementation "maven.modrinth:iris:${project.iris_version}"
+    // Libs required by Iris
+    implementation ("io.github.douira:glsl-transformer:2.0.0")
+    implementation ("org.antlr:antlr4-runtime:4.11.1")
+    implementation ("org.anarres:jcpp:1.4.14")
 }
 
 processResources {

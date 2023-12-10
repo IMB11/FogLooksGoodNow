@@ -1,6 +1,7 @@
 package com.mineblock11.foglooksgoodnow.client.mixin;
 
 import com.mineblock11.foglooksgoodnow.client.FogManager;
+import com.mineblock11.foglooksgoodnow.client.compat.IrisShadersCompat;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BackgroundRenderer;

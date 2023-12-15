@@ -25,8 +25,8 @@ jobs:
           cache: gradle
           java-version: 17
       - run: chmod +x gradlew
-      - name: Build And Publish To Maven
-        run: ./gradlew build publish --no-daemon -PmineblockMavenUsername=mineblock11 -PmineblockMavenPassword=${{ secrets.MAVEN_TOKEN }}
+      - name: Build with Gradle
+        run: ./gradlew build
       - uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: ${{ vars.MODRINTH_ID }}

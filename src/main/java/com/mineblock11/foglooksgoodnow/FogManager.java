@@ -50,7 +50,7 @@ public class FogManager {
     public final InterpolatedValue darkness;
     public final InterpolatedValue[] caveFogColors;
 
-    private Map<String, BiomeFogOverride> configMap;
+    private Map<String, BiomeFogOverride> overrideMap;
 
     public boolean useCaveFog = true;
     public double caveFogMultiplier = 1.0;
@@ -78,7 +78,10 @@ public class FogManager {
         this.caveFogColors[1] = new InterpolatedValue(config.caveFogColor.getRed() / 255f);
         this.caveFogColors[2] = new InterpolatedValue(config.caveFogColor.getRed() / 255f);
 
-        this.configMap = new HashMap<>();
+        this.overrideMap = new HashMap<>();
+        for (BiomeFogOverride override : config.biomeFogOverrides) {
+            this.overrideMap.put(override.biome().toString(), override);
+        }
     }
 
     public void setToConfig() {
@@ -107,6 +110,11 @@ public class FogManager {
 
         this.caveFogColors[2].setDefaultValue(config.caveFogColor.getBlue() / 255f);
         this.caveFogColors[2].set(config.caveFogColor.getBlue() / 255f);
+
+        this.overrideMap.clear();
+        for (BiomeFogOverride override : config.biomeFogOverrides) {
+            this.overrideMap.put(override.biome().toString(), override);
+        }
     }
 
     public void tick() {
@@ -117,7 +125,7 @@ public class FogManager {
         if (key == null)
             return;
 
-        BiomeFogOverride currentDensity = configMap.get(key.toString());
+        BiomeFogOverride currentDensity = overrideMap.get(key.toString());
         boolean isFogDense = this.client.world.getDimensionEffects().useThickFog(pos.getX(), pos.getZ()) || this.client.inGameHud.getBossBarHud().shouldThickenFog();
         float density = isFogDense? 0.9F : 1.0F;
 

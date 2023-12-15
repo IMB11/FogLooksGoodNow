@@ -1,14 +1,15 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.mineblock11.foglooksgoodnow.client.mixin",
+  "package": "com.mineblock11.foglooksgoodnow.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
   ],
   "client": [
     "FogRendererMixin",
     "GameRendererMixin",
-    "LevelRendererMixin"
+    "LevelRendererMixin",
+    "YACLScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

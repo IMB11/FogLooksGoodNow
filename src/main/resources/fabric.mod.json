@@ -4,22 +4,25 @@
   "version": "${version}",
   "name": "FogLooksGoodNow",
   "accessWidener": "flg.accesswidener",
-  "description": "Fabric port of Fog Looks Good Now",
+  "description": "A Fabric port of FogLooksGoodNow - Helps fog look better by moving the fog start closer.",
   "authors": [
-    "mineblock11",
+    "IMB11 (minelblock11)",
     "CAPPIN",
     "Hatsuya"
   ],
   "contact": {
-    "website": "https://mineblock11.dev/",
-    "repo": "https://github.com/mineblock11/FogLooksGoodNow"
+    "website": "https://imb11.dev/",
+    "repo": "https://github.com/imb11/FogLooksGoodNow"
   },
   "license": "CC-0",
-  "icon": "assets/fog-looks-good-now/icon.png",
+  "icon": "assets/foglooksgoodnow/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "com.mineblock11.foglooksgoodnow.client.FLG"
+      "com.mineblock11.foglooksgoodnow.FogLooksGoodNow"
+    ],
+    "modmenu": [
+      "com.mineblock11.foglooksgoodnow.compat.ModMenuEntrypoint"
     ]
   },
   "mixins": [

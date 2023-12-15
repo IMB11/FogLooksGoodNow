@@ -1,8 +1,8 @@
-package com.mineblock11.foglooksgoodnow.client.mixin;
+package com.mineblock11.foglooksgoodnow.mixin;
 
-import com.mineblock11.foglooksgoodnow.client.FLG;
-import com.mineblock11.foglooksgoodnow.client.FogManager;
-import com.mineblock11.foglooksgoodnow.client.FoggySkyRenderer;
+import com.mineblock11.foglooksgoodnow.FogLooksGoodNow;
+import com.mineblock11.foglooksgoodnow.FogManager;
+import com.mineblock11.foglooksgoodnow.render.FoggySkyRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.WorldRenderer;
@@ -15,16 +15,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(WorldRenderer.class)
 public class LevelRendererMixin {
+
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(CallbackInfo info) {
-        FogManager.densityManager = new FogManager();
-        FLG.LOGGER.info("Initialized Density Manager");
+        FogManager.instance();
+        FogLooksGoodNow.LOGGER.info("Initialized Fog Manager");
     }
 
     @Inject(method = "close()V", at = @At("TAIL"))
     private void close(CallbackInfo info) {
-        FogManager.getDensityManager().close();
-        FogManager.densityManager = null;
+        FogManager.instance().close();
     }
 
     @Inject(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At("TAIL"))

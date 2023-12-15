@@ -1,9 +1,0 @@
-{
-  "text.config.fog-looks-good-now.option.defaultRainFogStart": "Default Rain Fog Start",
-  "text.config.fog-looks-good-now.option.defaultFogStart": "Default Fog Start",
-  "text.config.fog-looks-good-now.option.defaultFogDensity": "Default Fog Density",
-  "text.config.fog-looks-good-now.option.useCaveFog": "Enable Cave Fog",
-  "text.config.fog-looks-good-now.option.caveFogDensity": "Cave Fog Density",
-  "text.config.fog-looks-good-now.option.caveFogColor": "Cave Fog Color",
-  "text.config.fog-looks-good-now.title": "Fog Looks Good Now"
-}

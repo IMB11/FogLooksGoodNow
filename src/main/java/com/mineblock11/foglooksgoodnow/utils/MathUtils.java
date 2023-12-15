@@ -1,4 +1,4 @@
-package com.mineblock11.foglooksgoodnow.client;
+package com.mineblock11.foglooksgoodnow.utils;
 
 import com.ibm.icu.impl.Pair;
 import org.joml.Vector3f;

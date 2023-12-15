@@ -1,6 +1,6 @@
-package com.mineblock11.foglooksgoodnow.client.mixin;
+package com.mineblock11.foglooksgoodnow.mixin;
 
-import com.mineblock11.foglooksgoodnow.client.FogManager;
+import com.mineblock11.foglooksgoodnow.FogManager;
 import net.minecraft.client.render.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GameRendererMixin {
     @Inject(method = "tick()V", at = @At("TAIL"))
     private void tick(CallbackInfo info) {
-        FogManager.getDensityManagerOptional().ifPresent(FogManager::tick);
+        FogManager.getInstanceOptional().ifPresent(FogManager::tick);
     }
 }

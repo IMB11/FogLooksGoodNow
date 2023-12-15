@@ -1,6 +1,7 @@
 package com.mineblock11.foglooksgoodnow.render;
 
 import com.mineblock11.foglooksgoodnow.FogManager;
+import com.mineblock11.foglooksgoodnow.compat.IrisShadersCompat;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
@@ -19,8 +20,7 @@ import org.joml.Matrix4f;
 
 public class FoggySkyRenderer {
     public static void renderSky(ClientWorld level, float partialTick, MatrixStack poseStack, Camera camera, Matrix4f projectionMatrix, boolean isFoggy, Runnable setupFog) {
-        // Checks if the cave fog should be rendered.
-        if (FogManager.shouldRenderCaveFog()) {
+        if (FogManager.shouldRenderCaveFog() && !IrisShadersCompat.isUsingShaders()) {
             // Gets the density manager from the FogManager.
             FogManager densityManager = FogManager.instance();
 

@@ -39,7 +39,7 @@ public class FLGConfig {
     @SerialEntry
     public boolean enableCaveFog = true;
     @SerialEntry
-    public float caveFogVisibility = 0.4F;
+    public float caveFogVisibility = 0.25F;
     @SerialEntry
     public Color caveFogColor = Color.decode("#333333");
 

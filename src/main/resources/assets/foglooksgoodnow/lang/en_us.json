@@ -1,0 +1,24 @@
+{
+  "flgn.config.surface": "Surface Fog",
+
+  "flgn.config.fogStart.name": "Fog Start",
+  "flgn.config.fogStart.desc": "The percentage distance from the camera where the fog starts.\n\nThe actual distance value for the fog start is equal to this percentage multiplied by the render distance.",
+  "flgn.config.fogDensity.name": "Fog Density",
+  "flgn.config.fogDensity.desc": "The density of the fog - how opaque it is.",
+
+  "flgn.config.fogStartRain.name": "Rainy Fog Start Multiplier",
+  "flgn.config.fogStartRain.desc": "The amount to multiply the fog start by when it's raining",
+  "flgn.config.fogDensityRain.name": "Rainy Fog Visibility Multiplier",
+  "flgn.config.fogDensityRain.desc": "The amount to multiply the fog density by when it's raining",
+
+  "flgn.config.cave": "Cave Fog",
+
+  "flgn.config.enableCaveFog.name": "Enable Cave Fog",
+  "flgn.config.enableCaveFog.desc": "Whether to enable cave fog modifications.",
+  "flgn.config.caveFogColor.name": "Cave Fog Color",
+  "flgn.config.caveFogColor.desc": "The color of the fog in caves.",
+  "flgn.config.caveFogDensity.name": "Cave Fog Density",
+  "flgn.config.caveFogDensity.desc": "The visibility of the fog in caves - how opaque it is.",
+  "flgn.config.caveFogStart.name": "Cave Fog Start",
+  "flgn.config.caveFogStart.desc": "The percentage distance from the camera where the fog starts in caves.\n\nFor cave fog, this percentage is multiplied with the original fog start percentage.\n\nThe actual distance value for the fog start is equal to this percentage multiplied by the render distance."
+}

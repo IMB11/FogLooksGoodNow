@@ -1,27 +1,37 @@
 {
   "schemaVersion": 1,
-  "id": "example",
+  "id": "fog-looks-good-now",
   "version": "${mod_version}",
-  "name": "Example Mod",
-  "description": "Lorum ipsum nadara un petit mozrango.",
+  "name": "FogLooksGoodNow",
+  "accessWidener": "flg.accesswidener",
+  "description": "A Fabric port of FogLooksGoodNow - Helps fog look better by moving the fog start closer.",
   "authors": [
-    "You!"
+    "IMB11 (mineblock11)",
+    "CAPPIN",
+    "Hatsuya"
   ],
-  "license": "MIT",
-  "icon": "assets/example/icon.png",
   "contact": {
-    "homepage": "https://your.site/",
-    "sources": "https://github.com/your/repo",
-    "issues": "https://github.com/your/repo"
+    "website": "https://imb11.dev/",
+    "repo": "https://github.com/imb11/FogLooksGoodNow"
   },
-  "environment": "*",
-  "accessWidener" : "example.accesswidener",
+  "license": "CC-0",
+  "icon": "assets/foglooksgoodnow/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.mineblock11.foglooksgoodnow.FogLooksGoodNow"
+    ],
+    "modmenu": [
+      "com.mineblock11.foglooksgoodnow.compat.ModMenuEntrypoint"
+    ]
+  },
   "mixins": [
-    "example.mixins.json"
+    "FogLooksGoodNow.mixins.json"
   ],
   "depends": {
+    "fabricloader": ">=0.14.14",
     "fabric": "*",
-    "fabricloader": "*",
+    "mru": "*",
     "minecraft": "${target_minecraft}"
   }
 }

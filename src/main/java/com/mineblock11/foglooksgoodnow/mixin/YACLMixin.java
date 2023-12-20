@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Pseudo
 @Mixin(value = YACLScreen.class, remap = false)
 public class YACLMixin {
-    /*? >1.20.3 {*/
+    /*? if >1.20.3 {*/
     @Shadow @Final public TabManager tabManager;
 
     @Shadow private boolean pendingChanges;

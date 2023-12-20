@@ -18,59 +18,42 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.biome.source.BiomeAccess;
 import org.joml.Matrix4f;
 
-public class FoggySkyRenderer {
+import java.awt.*;
+
+public class CaveFogRenderer {
     public static void renderCaveFog(ClientWorld level, float partialTick, MatrixStack poseStack, Camera camera, Matrix4f projectionMatrix, boolean isFoggy, Runnable setupFog) {
         if (FogManager.shouldRenderCaveFog() && !IrisShadersCompat.isUsingShaders()) {
-            // Gets the density manager from the FogManager.
-            FogManager densityManager = FogManager.instance();
+            FogManager fogManager = FogManager.instance();
 
-            // Gets the color of the cave fog.
             Vec3d fogColor = FogManager.getCaveFogColor();
-            // Gets the darkness value from the density manager.
-            float darkness = densityManager.darkness.get(partialTick);
-            // Calculates the underground factor based on the darkness and the underground factor from the density manager.
-            float undergroundFactor = 1 - MathHelper.lerp(darkness, densityManager.getUndergroundFactor(partialTick), 1.0F);
-            // Multiplies the underground factor by (undergroundFactor)^3 for a more dramatic effect.
-            undergroundFactor *= (float) Math.pow(undergroundFactor, 2);
+            float darkness = fogManager.darkness.get(partialTick);
+            float undergroundFactor = 1 - MathHelper.lerp(darkness, fogManager.getUndergroundFactor(partialTick), 1.0F);
 
-            // Enables blending for the render system.
+            undergroundFactor *= undergroundFactor * undergroundFactor * undergroundFactor;
+
             RenderSystem.enableBlend();
-            // Sets the default blend function for the render system.
             RenderSystem.defaultBlendFunc();
 
-            // Gets the buffer builder from the Tessellator instance.
             BufferBuilder bufferbuilder = Tessellator.getInstance().getBuffer();
 
-            // Disables the depth mask for the render system.
             RenderSystem.depthMask(false);
-            // Sets the shader program for the render system.
             RenderSystem.setShader(GameRenderer::getPositionColorProgram);
-            // Sets the shader color for the render system.
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-            // Calculates the time of day based on the sky angle.
+            // Gets the current fog color, simply based off the biome.
             float timeOfDay = MathHelper.clamp(MathHelper.cos(level.getSkyAngle(partialTick) * ((float)Math.PI * 2F)) * 2.0F + 0.5F, 0.0F, 1.0F);
-            // Gets the biome manager from the level.
             BiomeAccess biomemanager = level.getBiomeAccess();
-            // Calculates the sample position based on the camera position.
             Vec3d samplePos = camera.getPos().subtract(2.0D, 2.0D, 2.0D).multiply(0.25D);
-            // Samples the fog color based on the biome and the time of day.
             Vec3d skyFogColor = CubicSampler.sampleColor(samplePos, (x, y, z) -> level.getDimensionEffects().adjustFogColor(Vec3d.unpackRgb(biomemanager.getBiomeForNoiseGen(x, y, z).value().getFogColor()), timeOfDay));
 
-            // Sets the radius for the cone rendering.
             float radius = 5.0F;
-
-            // Renders a cone pointing upwards.
             renderCone(poseStack, bufferbuilder, 32, true, radius, -30.0F,
-                    (float) (fogColor.x * skyFogColor.x), (float) (fogColor.y * skyFogColor.y), (float) (fogColor.z * skyFogColor.z), undergroundFactor,
+                    (float) (fogColor.x), (float) (fogColor.y), (float) (fogColor.z ), undergroundFactor,
                     0.0F, (float) (fogColor.x * skyFogColor.x), (float) (fogColor.y * skyFogColor.y), (float) (fogColor.z * skyFogColor.z), undergroundFactor);
-
-            // Renders a cone pointing downwards.
             renderCone(poseStack, bufferbuilder, 32, false, radius, 30.0F,
-                    (float) (fogColor.x * skyFogColor.x), (float) (fogColor.y * skyFogColor.y), (float) (fogColor.z * skyFogColor.z), undergroundFactor * 0.2F,
+                    (float) (fogColor.x), (float) (fogColor.y), (float) (fogColor.z ), undergroundFactor * 0.2F,
                     0.0F, (float) (fogColor.x * skyFogColor.x), (float) (fogColor.y * skyFogColor.y), (float) (fogColor.z * skyFogColor.z), undergroundFactor);
 
-            // Enables the depth mask for the render system.
             RenderSystem.depthMask(true);
         }
     }

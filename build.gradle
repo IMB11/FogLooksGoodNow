@@ -1,6 +1,6 @@
 plugins.apply 'fabric-loom'
 
-version = "${property('mod.version')}+${stonecutter.current().version()}"
+version = "${property('mod.version')}+${stonecutter.current.version}"
 
 repositories {
     mavenCentral()
@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${stonecutter.current().version()}"
+    minecraft "com.mojang:minecraft:${stonecutter.current.version}"
     mappings "net.fabricmc:yarn:${property('deps.yarn')}:v2"
 
     modImplementation "net.fabricmc:fabric-loader:${property('deps.fabric_loader')}"
@@ -46,12 +46,18 @@ dependencies {
     implementation ("org.anarres:jcpp:1.4.14")
 }
 
+if (stonecutter.current.active) { // run configs for non-active version would be invalid
+    loom {
+        runConfigs.all {
+            ideConfigGenerated = true // generate IDE tasks for running client, server and testmod, datagen if those are present
+            runDir "../../run" // use a global run directory for all versions
+        }
+    }
+}
+
 loom {
     accessWidenerPath = file("../../src/main/resources/flg.accesswidener")
-
-    runConfigs.server.ideConfigGenerated = false
 }
-validateAccessWidener.enabled = false
 
 java {
     withSourcesJar()
@@ -73,7 +79,7 @@ jar {
     from rootProject.file('LICENSE')
 }
 
-if (stonecutter.current().isActiveVersion()) {
+if (stonecutter.current.active) {
     rootProject.tasks.register('buildActive') {
         setGroup 'project'
 

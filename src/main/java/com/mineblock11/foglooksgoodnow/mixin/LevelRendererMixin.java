@@ -2,7 +2,7 @@ package com.mineblock11.foglooksgoodnow.mixin;
 
 import com.mineblock11.foglooksgoodnow.FogLooksGoodNow;
 import com.mineblock11.foglooksgoodnow.FogManager;
-import com.mineblock11.foglooksgoodnow.render.FoggySkyRenderer;
+import com.mineblock11.foglooksgoodnow.render.CaveFogRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.WorldRenderer;
@@ -30,6 +30,6 @@ public class LevelRendererMixin {
     @Inject(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At("TAIL"))
     public void renderSky(MatrixStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean isFoggy, Runnable setupFog, CallbackInfo ci) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        FoggySkyRenderer.renderCaveFog(mc.world, partialTick, poseStack, camera, projectionMatrix, isFoggy, setupFog);
+        CaveFogRenderer.renderCaveFog(mc.world, partialTick, poseStack, camera, projectionMatrix, isFoggy, setupFog);
     }
 }

@@ -32,6 +32,11 @@ public class FogManager {
     @Nullable
     private static FogManager INSTANCE;
     private final InterpolatedValue fogEndRain;
+    private boolean isAboveGround;
+
+    public boolean isAboveGround() {
+        return isAboveGround;
+    }
 
     public static FogManager instance() {
         if(INSTANCE == null) {
@@ -164,14 +169,13 @@ public class FogManager {
         this.currentBlockLight.interpolate(client.world.getLightLevel(LightType.BLOCK, pos));
         this.currentLight.interpolate(client.world.getBaseLightLevel(pos, 0));
 
-        boolean isAboveGround =  pos.getY() > client.world.getTopY(Heightmap.Type.WORLD_SURFACE, pos.getX(), pos.getZ()) || pos.getY() > client.world.getSeaLevel();
+        this.isAboveGround = pos.getY() > client.world.getTopY(Heightmap.Type.WORLD_SURFACE, pos.getX(), pos.getZ()) || pos.getY() > client.world.getSeaLevel();
         if (isAboveGround) { this.undergroundness.interpolate(0.0F, 0.05f); } else { this.undergroundness.interpolate(1.0F); }
     }
 
     public float getUndergroundFactor(float partialTick) {
         float y = (float) client.cameraEntity.getY();
         float yFactor = MathHelper.clamp(MathUtils.mapRange(client.world.getSeaLevel() - 32.0F, client.world.getSeaLevel() + 32.0F, 1, 0, y), 0.0F, 1.0F);
-        //FLG.LOGGER.info("" + yFactor);
         return MathHelper.lerp(yFactor, 1 - this.undergroundness.get(partialTick), this.currentSkyLight.get(partialTick) / 16.0F);
     }
 
@@ -182,46 +186,11 @@ public class FogManager {
         return new Vec3d(cfc[0].get(mc.getLastFrameDuration()), cfc[1].get(mc.getLastFrameDuration()), cfc[2].get(mc.getLastFrameDuration()));
     }
 
-    private static final Cache<Pair<Integer, Integer>, Boolean> EXPOSED_CACHE = CacheBuilder.newBuilder()
-            .maximumSize(1000)
-            .expireAfterAccess(Duration.ofSeconds(120))
-            .build();
-    private static boolean isPlayerExposed() {
-        MinecraftClient client = MinecraftClient.getInstance();
-
-        if(client.world == null || client.player == null) {
-            return false;
-        }
-
-        int minY = client.player.getBlockY();
-        int x = client.player.getBlockX();
-        int z = client.player.getBlockZ();
-
-        // Check Cache
-        Boolean cached = EXPOSED_CACHE.getIfPresent(new Pair<>(x, z));
-        if(cached != null) {
-            return cached;
-        }
-
-        // Check if all blocks above the player are air.
-        for(int y = minY; y < 256; y++) {
-            if(!client.world.getBlockState(new BlockPos(x, y, z)).isAir()) {
-                // Cache result.
-                EXPOSED_CACHE.put(new Pair<>(x, z), false);
-                return false;
-            }
-        }
-
-        // Cache result.
-        EXPOSED_CACHE.put(new Pair<>(x, z), true);
-        return true;
-    }
-
     public static boolean shouldRenderCaveFog() {
         boolean isNormalSky = MinecraftClient.getInstance().world.getDimensionEffects().getSkyType() == DimensionEffects.SkyType.NORMAL;
         boolean isSubmerged = MinecraftClient.getInstance().gameRenderer.getCamera().getSubmersionType() != CameraSubmersionType.NONE;
 
-        return isNormalSky && INSTANCE.useCaveFog && isSubmerged && isPlayerExposed();
+        return isNormalSky && INSTANCE.useCaveFog && !isSubmerged && !INSTANCE.isAboveGround();
     }
 
     public float[] getDarknessEffectedFog(float fs, float fd) {

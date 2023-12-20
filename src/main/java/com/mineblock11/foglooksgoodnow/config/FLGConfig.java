@@ -136,6 +136,10 @@ public class FLGConfig {
                                     .option(caveFogDensityOption)
                                     .option(caveFogColorOption)
                                     .build())
+                            .save(() -> {
+                                GSON.save();
+                                FogManager.getInstanceOptional().ifPresent(FogManager::setToConfig);
+                            })
                             .title(Text.of("Fog Looks Good Now"));
                 }
         );

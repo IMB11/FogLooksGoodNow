@@ -1,10 +1,16 @@
 package com.mineblock11.foglooksgoodnow;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.LoadingCache;
 import com.mineblock11.foglooksgoodnow.config.BiomeFogOverride;
 import com.mineblock11.foglooksgoodnow.config.FLGConfig;
 import com.mineblock11.foglooksgoodnow.utils.MathUtils;
+import net.minecraft.util.Pair;
+import org.antlr.v4.misc.Graph;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.Duration;
 import java.util.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.CameraSubmersionType;
@@ -176,8 +182,46 @@ public class FogManager {
         return new Vec3d(cfc[0].get(mc.getLastFrameDuration()), cfc[1].get(mc.getLastFrameDuration()), cfc[2].get(mc.getLastFrameDuration()));
     }
 
+    private static final Cache<Pair<Integer, Integer>, Boolean> EXPOSED_CACHE = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .expireAfterAccess(Duration.ofSeconds(120))
+            .build();
+    private static boolean isPlayerExposed() {
+        MinecraftClient client = MinecraftClient.getInstance();
+
+        if(client.world == null || client.player == null) {
+            return false;
+        }
+
+        int minY = client.player.getBlockY();
+        int x = client.player.getBlockX();
+        int z = client.player.getBlockZ();
+
+        // Check Cache
+        Boolean cached = EXPOSED_CACHE.getIfPresent(new Pair<>(x, z));
+        if(cached != null) {
+            return cached;
+        }
+
+        // Check if all blocks above the player are air.
+        for(int y = minY; y < 256; y++) {
+            if(!client.world.getBlockState(new BlockPos(x, y, z)).isAir()) {
+                // Cache result.
+                EXPOSED_CACHE.put(new Pair<>(x, z), false);
+                return false;
+            }
+        }
+
+        // Cache result.
+        EXPOSED_CACHE.put(new Pair<>(x, z), true);
+        return true;
+    }
+
     public static boolean shouldRenderCaveFog() {
-        return MinecraftClient.getInstance().world.getDimensionEffects().getSkyType() == DimensionEffects.SkyType.NORMAL && INSTANCE.useCaveFog && MinecraftClient.getInstance().gameRenderer.getCamera().getSubmersionType() == CameraSubmersionType.NONE;
+        boolean isNormalSky = MinecraftClient.getInstance().world.getDimensionEffects().getSkyType() == DimensionEffects.SkyType.NORMAL;
+        boolean isSubmerged = MinecraftClient.getInstance().gameRenderer.getCamera().getSubmersionType() != CameraSubmersionType.NONE;
+
+        return isNormalSky && INSTANCE.useCaveFog && isSubmerged && isPlayerExposed();
     }
 
     public float[] getDarknessEffectedFog(float fs, float fd) {

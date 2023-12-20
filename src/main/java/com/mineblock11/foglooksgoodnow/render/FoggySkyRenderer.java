@@ -19,7 +19,7 @@ import net.minecraft.world.biome.source.BiomeAccess;
 import org.joml.Matrix4f;
 
 public class FoggySkyRenderer {
-    public static void renderSky(ClientWorld level, float partialTick, MatrixStack poseStack, Camera camera, Matrix4f projectionMatrix, boolean isFoggy, Runnable setupFog) {
+    public static void renderCaveFog(ClientWorld level, float partialTick, MatrixStack poseStack, Camera camera, Matrix4f projectionMatrix, boolean isFoggy, Runnable setupFog) {
         if (FogManager.shouldRenderCaveFog() && !IrisShadersCompat.isUsingShaders()) {
             // Gets the density manager from the FogManager.
             FogManager densityManager = FogManager.instance();

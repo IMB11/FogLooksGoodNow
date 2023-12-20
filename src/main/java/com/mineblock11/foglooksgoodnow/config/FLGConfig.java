@@ -69,7 +69,6 @@ public class FLGConfig {
                                     .text(Text.translatable("flgn.config.fogStart.desc")).build())
                             .binding(defaults.fogStart, () -> config.fogStart, (val) -> config.fogStart = val)
                             .controller(opt -> FloatSliderControllerBuilder.create(opt).formatValue(percentFormatter).step(0.05f).range(0f, 2f))
-                            .listener((floatOption, aFloat) -> FogManager.getInstanceOptional().ifPresent(FogManager::setToConfig))
                             .build();
 
                     var fogDensityOption = Option.<Float>createBuilder()
@@ -78,7 +77,6 @@ public class FLGConfig {
                                     .text(Text.translatable("flgn.config.fogDensity.desc")).build())
                             .binding(defaults.fogVisibility, () -> config.fogVisibility, (val) -> config.fogVisibility = val)
                             .controller(opt -> FloatSliderControllerBuilder.create(opt).step(0.05f).formatValue(percentFormatter).range(0f, 2f))
-                            .listener((floatOption, aFloat) -> FogManager.getInstanceOptional().ifPresent(FogManager::setToConfig))
                             .build();
 
                     var fogStartRainOption = Option.<Float>createBuilder()
@@ -87,7 +85,6 @@ public class FLGConfig {
                                     .text(Text.translatable("flgn.config.fogStartRain.desc")).build())
                             .binding(defaults.fogStartRain, () -> config.fogStartRain, (val) -> config.fogStartRain = val)
                             .controller(opt -> FloatSliderControllerBuilder.create(opt).step(0.05f).formatValue(multiplierFormatter).range(0f, 2f))
-                            .listener((floatOption, aFloat) -> FogManager.getInstanceOptional().ifPresent(FogManager::setToConfig))
                             .build();
 
                     var fogDensityRainOption = Option.<Float>createBuilder()
@@ -96,7 +93,6 @@ public class FLGConfig {
                                     .text(Text.translatable("flgn.config.fogDensityRain.desc")).build())
                             .binding(defaults.fogVisibilityRain, () -> config.fogVisibilityRain, (val) -> config.fogVisibilityRain = val)
                             .controller(opt -> FloatSliderControllerBuilder.create(opt).step(0.05f).range(0f, 2f).formatValue(multiplierFormatter))
-                            .listener((floatOption, aFloat) -> FogManager.getInstanceOptional().ifPresent(FogManager::setToConfig))
                             .build();
 
                     var caveFogDensityOption = Option.<Float>createBuilder()
@@ -105,7 +101,6 @@ public class FLGConfig {
                                     .text(Text.translatable("flgn.config.caveFogDensity.desc")).build())
                             .binding(defaults.caveFogVisibility, () -> config.caveFogVisibility, (val) -> config.caveFogVisibility = val)
                             .controller(opt -> FloatSliderControllerBuilder.create(opt).step(0.05f).formatValue(percentFormatter).range(0f, 2f))
-                            .listener((floatOption, aFloat) -> FogManager.getInstanceOptional().ifPresent(FogManager::setToConfig))
                             .build();
 
                     var caveFogColorOption = Option.<Color>createBuilder()
@@ -114,7 +109,6 @@ public class FLGConfig {
                                     .text(Text.translatable("flgn.config.caveFogColor.desc")).build())
                             .binding(defaults.caveFogColor, () -> config.caveFogColor, (val) -> config.caveFogColor = val)
                             .controller(ColorControllerBuilder::create)
-                            .listener((colorOption, color) -> FogManager.getInstanceOptional().ifPresent(FogManager::setToConfig))
                             .build();
 
                     var enableCaveFogOption = Option.<Boolean>createBuilder()
@@ -145,6 +139,10 @@ public class FLGConfig {
                                     .option(caveFogDensityOption)
                                     .option(caveFogColorOption)
                                     .build())
+                            .save(() -> {
+                                GSON.save();
+                                FogManager.getInstanceOptional().ifPresent(FogManager::setToConfig);
+                            })
                             .title(Text.of("Fog Looks Good Now"));
                 }
         );

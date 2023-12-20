@@ -57,8 +57,8 @@ public class FLGConfig {
         return GSON.instance();
     }
 
-    private static ValueFormatter<Float> percentFormatter = (val) -> Text.of(String.format("%.2f", val * 100) + "%");
-    private static ValueFormatter<Float> multiplierFormatter = (val) -> Text.of(String.format("%.2f", val) + "x");
+    private static final ValueFormatter<Float> percentFormatter = (val) -> Text.of(String.format("%.2f", val * 100) + "%");
+    private static final ValueFormatter<Float> multiplierFormatter = (val) -> Text.of(String.format("%.2f", val) + "x");
 
     public static YetAnotherConfigLib getInstance() {
         return YetAnotherConfigLib.create(GSON,
@@ -145,15 +145,6 @@ public class FLGConfig {
                                     .option(caveFogDensityOption)
                                     .option(caveFogColorOption)
                                     .build())
-                            .save(() -> {
-                                GSON.save();
-
-                                MinecraftClient.getInstance().executeTask(() -> {
-                                    if(MinecraftClient.getInstance().world != null) {
-                                        FogManager.getInstanceOptional().ifPresent(FogManager::setToConfig);
-                                    }
-                                });
-                            })
                             .title(Text.of("Fog Looks Good Now"));
                 }
         );

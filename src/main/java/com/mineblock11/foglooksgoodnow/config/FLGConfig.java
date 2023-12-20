@@ -42,7 +42,7 @@ public class FLGConfig {
     @SerialEntry
     public float caveFogVisibility = 0.25F;
     @SerialEntry
-    public Color caveFogColor = Color.decode("#333333");
+    public Color caveFogColor = new Color(51, 51, 51, 255);
 
     @SerialEntry
     public List<BiomeFogOverride> biomeFogOverrides = List.of(
@@ -57,10 +57,9 @@ public class FLGConfig {
         return GSON.instance();
     }
 
-    private static final ValueFormatter<Float> percentFormatter = (val) -> Text.of(String.format("%.2f", val * 100) + "%");
-    private static final ValueFormatter<Float> multiplierFormatter = (val) -> Text.of(String.format("%.2f", val) + "x");
-
     public static YetAnotherConfigLib getInstance() {
+        final ValueFormatter<Float> percentFormatter = (val) -> Text.of(String.format("%.2f", val * 100) + "%");
+        final ValueFormatter<Float> multiplierFormatter = (val) -> Text.of(String.format("%.2f", val) + "x");
         return YetAnotherConfigLib.create(GSON,
                 (defaults, config, builder) -> {
                     var fogStartOption = Option.<Float>createBuilder()
@@ -117,11 +116,9 @@ public class FLGConfig {
                                     .text(Text.translatable("flgn.config.enableCaveFog.desc")).build())
                             .binding(defaults.enableCaveFog, () -> config.enableCaveFog, (val) -> config.enableCaveFog = val)
                             .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true).trueFalseFormatter())
-                            .listener((booleanOption, aBoolean) -> {
-                                caveFogColorOption.setAvailable(aBoolean);
-                                caveFogDensityOption.setAvailable(aBoolean);
-
-                                FogManager.getInstanceOptional().ifPresent(FogManager::setToConfig);
+                            .listener((opt, val) -> {
+                                caveFogColorOption.setAvailable(val);
+                                caveFogDensityOption.setAvailable(val);
                             })
                             .build();
 
@@ -139,10 +136,6 @@ public class FLGConfig {
                                     .option(caveFogDensityOption)
                                     .option(caveFogColorOption)
                                     .build())
-                            .save(() -> {
-                                GSON.save();
-                                FogManager.getInstanceOptional().ifPresent(FogManager::setToConfig);
-                            })
                             .title(Text.of("Fog Looks Good Now"));
                 }
         );

@@ -28,6 +28,9 @@ public class FLGConfig {
     )));
 
     @SerialEntry
+    public boolean disableAll = false;
+
+    @SerialEntry
     public float fogStart = 1F;
     @SerialEntry
     public float fogVisibility = 1f;
@@ -122,6 +125,22 @@ public class FLGConfig {
                             })
                             .build();
 
+                    var disableAllOption = Option.<Boolean>createBuilder()
+                            .name(Text.translatable("flgn.config.disableAll.name"))
+                            .description(OptionDescription.createBuilder().text(Text.translatable("flgn.config.disableAll.desc")).build())
+                            .binding(defaults.disableAll, () -> config.disableAll, (val) -> config.disableAll = val)
+                            .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true).trueFalseFormatter())
+                            .listener((opt, val) -> {
+                                fogStartOption.setAvailable(!val);
+                                fogDensityOption.setAvailable(!val);
+                                fogStartRainOption.setAvailable(!val);
+                                fogDensityRainOption.setAvailable(!val);
+
+                                enableCaveFogOption.setAvailable(!val);
+                                caveFogDensityOption.setAvailable(!val);
+                                caveFogColorOption.setAvailable(!val);
+                            }).build();
+
                     return builder
                             .category(ConfigCategory.createBuilder()
                                     .name(Text.translatable("flgn.config.surface"))
@@ -135,6 +154,10 @@ public class FLGConfig {
                                     .option(enableCaveFogOption)
                                     .option(caveFogDensityOption)
                                     .option(caveFogColorOption)
+                                    .build())
+                            .category(ConfigCategory.createBuilder()
+                                    .name(Text.translatable("flgn.config.global"))
+                                    .option(disableAllOption)
                                     .build())
                             .save(() -> {
                                 GSON.save();

@@ -20,5 +20,10 @@
   "flgn.config.caveFogDensity.name": "Cave Fog Density",
   "flgn.config.caveFogDensity.desc": "The visibility of the fog in caves - how opaque it is.",
   "flgn.config.caveFogStart.name": "Cave Fog Start",
-  "flgn.config.caveFogStart.desc": "The percentage distance from the camera where the fog starts in caves.\n\nFor cave fog, this percentage is multiplied with the original fog start percentage.\n\nThe actual distance value for the fog start is equal to this percentage multiplied by the render distance."
+  "flgn.config.caveFogStart.desc": "The percentage distance from the camera where the fog starts in caves.\n\nFor cave fog, this percentage is multiplied with the original fog start percentage.\n\nThe actual distance value for the fog start is equal to this percentage multiplied by the render distance.",
+
+  "flgn.config.global": "Global Options",
+
+  "flgn.config.disableAll.name": "Disable All Functionality",
+  "flgn.config.disableAll.desc": "Disables all fog modifications applied by Fog Looks Good Now, useful if you want to temporarily disable fog modifications or make comparisons before and after the mod is applied."
 }

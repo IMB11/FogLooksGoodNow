@@ -1,6 +1,7 @@
 package com.mineblock11.foglooksgoodnow.mixin;
 
 import com.mineblock11.foglooksgoodnow.FogManager;
+import com.mineblock11.foglooksgoodnow.config.FLGConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.client.render.Camera;
@@ -29,6 +30,7 @@ public class FogRendererMixin {
 
     @ModifyArgs(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;clearColor(FFFF)V", remap = false))
     private static void modifyFogColors(Args args, Camera camera, float partialTicks, ClientWorld level, int renderDistanceChunks, float bossColorModifier) {
+        if(FLGConfig.get().disableAll) return;
         if (FogManager.shouldRenderCaveFog()) {
             FogManager fogManager = FogManager.instance();
             Vec3d fogColor = FogManager.getCaveFogColor();
@@ -41,6 +43,7 @@ public class FogRendererMixin {
     }
     @Inject(method = "applyFog", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void fogRenderEvent(Camera camera, BackgroundRenderer.FogType fogMode, float viewDistance, boolean thickFog, float partialTick, CallbackInfo ci, CameraSubmersionType fogType, Entity entity, BackgroundRenderer.FogData fogData) {
+        if(FLGConfig.get().disableAll) return;
         if (camera.getSubmersionType() == CameraSubmersionType.NONE) {
             FogManager fogManager = FogManager.instance();
 

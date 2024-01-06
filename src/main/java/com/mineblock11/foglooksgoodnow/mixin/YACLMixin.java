@@ -18,7 +18,7 @@ public class YACLMixin {
 
     @Shadow private boolean pendingChanges;
 
-    @Inject(method = "finishOrSave", at = @At(value = "INVOKE", target = "Ljava/util/Set;forEach(Ljava/util/function/Consumer;)V", shift = At.Shift.AFTER), cancellable = false)
+    @Inject(method = "finishOrSave", at = @At(value = "INVOKE", target = "Ljava/util/Set;forEach(Ljava/util/function/Consumer;)V", shift = At.Shift.AFTER))
     public void YACL_FIX(CallbackInfo ci) {
         pendingChanges = false;
         if (tabManager.getCurrentTab() instanceof YACLScreen.CategoryTab categoryTab) {

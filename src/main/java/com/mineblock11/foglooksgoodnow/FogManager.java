@@ -129,7 +129,8 @@ public class FogManager {
     }
 
     public void tick() {
-        BlockPos pos = this.client.gameRenderer.getCamera().getBlockPos();
+        BlockPos pos = this.client.player.getBlockPos();
+        Vec3d eyePos = this.client.player.getEyePos();
         Biome biome = this.client.world.getBiome(pos).value();
         Identifier key = this.client.world.getRegistryManager().get(RegistryKeys.BIOME).getId(biome);
 
@@ -169,7 +170,7 @@ public class FogManager {
         this.currentBlockLight.interpolate(client.world.getLightLevel(LightType.BLOCK, pos));
         this.currentLight.interpolate(client.world.getBaseLightLevel(pos, 0));
 
-        this.isAboveGround = pos.getY() > client.world.getTopY(Heightmap.Type.WORLD_SURFACE, pos.getX(), pos.getZ()) || pos.getY() > client.world.getSeaLevel();
+        this.isAboveGround = eyePos.getY() + 0.5f > client.world.getTopY(Heightmap.Type.WORLD_SURFACE, pos.getX(), pos.getZ()) || eyePos.getY() + 0.5f > client.world.getSeaLevel();
         if (isAboveGround) { this.undergroundness.interpolate(0.0F, 0.05f); } else { this.undergroundness.interpolate(1.0F); }
     }
 

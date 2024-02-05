@@ -74,12 +74,6 @@ public class FLGConfig {
                                     .text(Text.translatable("flgn.config.fogStart.desc")).build())
                             .binding(defaults.fogStart, () -> config.fogStart, (val) -> config.fogStart = val)
                             .controller(opt -> FloatSliderControllerBuilder.create(opt).formatValue(percentFormatter).step(0.02f).range(0.40f, 2f))
-                            .listener((opt, val) -> {
-                                if(ref.fogEndOption.isEmpty()) return;
-                                if(val < ref.fogEndOption.get().pendingValue() && !ref.fogEndOption.get().isPendingValueDefault()) {
-                                    opt.requestSet(ref.fogEndOption.get().pendingValue());
-                                }
-                            })
                             .build());
 
                     ref.fogEndOption = Optional.of(Option.<Float>createBuilder()
@@ -88,12 +82,6 @@ public class FLGConfig {
                                     .text(Text.translatable("flgn.config.fogDensity.desc")).build())
                             .binding(defaults.fogEnd, () -> config.fogEnd, (val) -> config.fogEnd = val)
                             .controller(opt -> FloatSliderControllerBuilder.create(opt).step(0.02f).formatValue(percentFormatter).range(0f, 1.5f))
-                            .listener((opt, val) -> {
-                                if(ref.fogStartOption.isEmpty()) return;
-                                if(val > ref.fogStartOption.get().pendingValue() && !ref.fogStartOption.get().isPendingValueDefault()) {
-                                    opt.requestSet(ref.fogStartOption.get().pendingValue());
-                                }
-                            })
                             .build());
 
                     var fogStartRainOption = Option.<Float>createBuilder()

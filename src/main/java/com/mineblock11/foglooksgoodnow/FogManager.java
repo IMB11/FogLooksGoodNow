@@ -1,17 +1,8 @@
 package com.mineblock11.foglooksgoodnow;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.LoadingCache;
 import com.mineblock11.foglooksgoodnow.config.BiomeFogOverride;
 import com.mineblock11.foglooksgoodnow.config.FLGConfig;
 import com.mineblock11.foglooksgoodnow.utils.MathUtils;
-import net.minecraft.util.Pair;
-import org.antlr.v4.misc.Graph;
-import org.jetbrains.annotations.Nullable;
-
-import java.time.Duration;
-import java.util.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.CameraSubmersionType;
 import net.minecraft.client.render.DimensionEffects;
@@ -27,30 +18,15 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.LightType;
 import net.minecraft.world.biome.Biome;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class FogManager {
     @Nullable
     private static FogManager INSTANCE;
-    private final InterpolatedValue fogEndRain;
-    private boolean isAboveGround;
-
-    public boolean isAboveGround() {
-        return isAboveGround;
-    }
-
-    public static FogManager instance() {
-        if(INSTANCE == null) {
-            INSTANCE = new FogManager();
-        }
-
-        return INSTANCE;
-    }
-
-    public static Optional<FogManager> getInstanceOptional() {
-        return Optional.ofNullable(INSTANCE);
-    }
-
-    private final MinecraftClient client;
     public final InterpolatedValue fogStart;
     public final InterpolatedValue fogEnd;
     public final InterpolatedValue currentSkyLight;
@@ -60,11 +36,12 @@ public class FogManager {
     public final InterpolatedValue undergroundness;
     public final InterpolatedValue darkness;
     public final InterpolatedValue[] caveFogColors;
-
-    private Map<String, BiomeFogOverride> overrideMap;
-
+    private final InterpolatedValue fogEndRain;
+    private final MinecraftClient client;
     public boolean useCaveFog = true;
     public double caveFogMultiplier = 1.0;
+    private boolean isAboveGround;
+    private final Map<String, BiomeFogOverride> overrideMap;
 
     public FogManager() {
         this.client = MinecraftClient.getInstance();
@@ -74,8 +51,8 @@ public class FogManager {
         this.fogStart = new InterpolatedValue(1 - config.fogStart);
         this.fogStartRain = new InterpolatedValue(1 - config.fogStartRain);
 
-        this.fogEnd = new InterpolatedValue(1f - config.fogVisibility);
-        this.fogEndRain = new InterpolatedValue(1f - config.fogVisibilityRain);
+        this.fogEnd = new InterpolatedValue(1f - config.fogEnd);
+        this.fogEndRain = new InterpolatedValue(1f - config.fogEndRain);
 
         this.currentSkyLight = new InterpolatedValue(16.0F);
         this.currentBlockLight = new InterpolatedValue(16.0F);
@@ -95,6 +72,36 @@ public class FogManager {
         }
     }
 
+    public static FogManager instance() {
+        if (INSTANCE == null) {
+            INSTANCE = new FogManager();
+        }
+
+        return INSTANCE;
+    }
+
+    public static Optional<FogManager> getInstanceOptional() {
+        return Optional.ofNullable(INSTANCE);
+    }
+
+    public static Vec3d getCaveFogColor() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+
+        InterpolatedValue[] cfc = INSTANCE.caveFogColors;
+        return new Vec3d(cfc[0].get(mc.getLastFrameDuration()), cfc[1].get(mc.getLastFrameDuration()), cfc[2].get(mc.getLastFrameDuration()));
+    }
+
+    public static boolean shouldRenderCaveFog() {
+        boolean isNormalSky = MinecraftClient.getInstance().world.getDimensionEffects().getSkyType() == DimensionEffects.SkyType.NORMAL;
+        boolean isSubmerged = MinecraftClient.getInstance().gameRenderer.getCamera().getSubmersionType() != CameraSubmersionType.NONE;
+
+        return isNormalSky && INSTANCE.useCaveFog && !isSubmerged && !INSTANCE.isAboveGround();
+    }
+
+    public boolean isAboveGround() {
+        return isAboveGround;
+    }
+
     public void setToConfig() {
         FLGConfig config = FLGConfig.get();
 
@@ -104,11 +111,11 @@ public class FogManager {
         this.fogStartRain.setDefaultValue(1 - config.fogStartRain);
         this.fogStartRain.set(1 - config.fogStartRain);
 
-        this.fogEnd.setDefaultValue(2f - config.fogVisibility);
-        this.fogEnd.set(2f - config.fogVisibility);
+        this.fogEnd.setDefaultValue(2f - config.fogEnd);
+        this.fogEnd.set(2f - config.fogEnd);
 
-        this.fogEndRain.setDefaultValue(1f + config.fogVisibilityRain);
-        this.fogEndRain.set(1f + config.fogVisibilityRain);
+        this.fogEndRain.setDefaultValue(1f + config.fogEndRain);
+        this.fogEndRain.set(1f + config.fogEndRain);
 
         this.useCaveFog = config.enableCaveFog;
         this.caveFogMultiplier = config.caveFogVisibility;
@@ -139,14 +146,14 @@ public class FogManager {
 
         BiomeFogOverride currentDensity = overrideMap.get(key.toString());
         boolean isFogDense = this.client.world.getDimensionEffects().useThickFog(pos.getX(), pos.getZ()) || this.client.inGameHud.getBossBarHud().shouldThickenFog();
-        float density = isFogDense? 0.9F : 1.0F;
+        float density = isFogDense ? 0.9F : 1.0F;
 
         float[] darknessAffectedFog;
 
-        if(client.world.isRaining() && !shouldRenderCaveFog()){
-            this.fogStartRain.interpolate(this.fogStartRain.defaultValue);
-        }else{
-            this.fogStartRain.interpolate(1, 0.05f);
+        if (client.world.isRaining() && !shouldRenderCaveFog()) {
+            this.fogStartRain.interpolate(this.fogStartRain.defaultValue, 0.03f);
+        } else {
+            this.fogStartRain.interpolate(1, 0.03f);
         }
 
         if (currentDensity != null) {
@@ -171,27 +178,17 @@ public class FogManager {
         this.currentLight.interpolate(client.world.getBaseLightLevel(pos, 0));
 
         this.isAboveGround = eyePos.getY() + 0.5f > client.world.getTopY(Heightmap.Type.WORLD_SURFACE, pos.getX(), pos.getZ()) || eyePos.getY() + 0.5f > client.world.getSeaLevel();
-        if (isAboveGround) { this.undergroundness.interpolate(0.0F, 0.05f); } else { this.undergroundness.interpolate(1.0F); }
+        if (isAboveGround) {
+            this.undergroundness.interpolate(0.0F, 0.05f);
+        } else {
+            this.undergroundness.interpolate(1.0F);
+        }
     }
 
     public float getUndergroundFactor(float partialTick) {
         float y = (float) client.cameraEntity.getY();
         float yFactor = MathHelper.clamp(MathUtils.mapRange(client.world.getSeaLevel() - 32.0F, client.world.getSeaLevel() + 32.0F, 1, 0, y), 0.0F, 1.0F);
         return MathHelper.lerp(yFactor, 1 - this.undergroundness.get(partialTick), this.currentSkyLight.get(partialTick) / 16.0F);
-    }
-
-    public static Vec3d getCaveFogColor() {
-        MinecraftClient mc = MinecraftClient.getInstance();
-
-        InterpolatedValue[] cfc = INSTANCE.caveFogColors;
-        return new Vec3d(cfc[0].get(mc.getLastFrameDuration()), cfc[1].get(mc.getLastFrameDuration()), cfc[2].get(mc.getLastFrameDuration()));
-    }
-
-    public static boolean shouldRenderCaveFog() {
-        boolean isNormalSky = MinecraftClient.getInstance().world.getDimensionEffects().getSkyType() == DimensionEffects.SkyType.NORMAL;
-        boolean isSubmerged = MinecraftClient.getInstance().gameRenderer.getCamera().getSubmersionType() != CameraSubmersionType.NONE;
-
-        return isNormalSky && INSTANCE.useCaveFog && !isSubmerged && !INSTANCE.isAboveGround();
     }
 
     public float[] getDarknessEffectedFog(float fs, float fd) {
@@ -229,12 +226,12 @@ public class FogManager {
     private float calculateDarknessScale(LivingEntity pEntity, float darknessFactor, float partialTicks) {
         float factor = this.client.options.getDarknessEffectScale().getValue().floatValue();
         float f = 0.45F * darknessFactor;
-        return Math.max(0.0F, MathHelper.cos(((float)pEntity.age - partialTicks) * (float)Math.PI * 0.025F) * f) * factor;
+        return Math.max(0.0F, MathHelper.cos(((float) pEntity.age - partialTicks) * (float) Math.PI * 0.025F) * f) * factor;
     }
 
 
     public void close() {
-        if(INSTANCE == this) {
+        if (INSTANCE == this) {
             INSTANCE = null;
         }
     }
@@ -259,6 +256,7 @@ public class FogManager {
             this.previousValue = this.currentValue;
             this.currentValue = value;
         }
+
         public void set(double value) {
             this.previousValue = this.currentValue;
             this.currentValue = (float) value;
@@ -267,22 +265,27 @@ public class FogManager {
         public void setDefaultValue(float value) {
             this.defaultValue = value;
         }
+
         public void setDefaultValue(double value) {
-            this.defaultValue = (float)value;
+            this.defaultValue = (float) value;
         }
 
         public void interpolate(float value, float interpolationSpeed) {
             this.set(Float.isNaN(value) ? MathHelper.lerp(interpolationSpeed, currentValue, defaultValue) : MathHelper.lerp(interpolationSpeed, currentValue, value));
         }
+
         public void interpolate(double value, float interpolationSpeed) {
             this.set(Double.isNaN(value) ? MathHelper.lerp(interpolationSpeed, currentValue, defaultValue) : MathHelper.lerp(interpolationSpeed, currentValue, value));
         }
+
         public void interpolate(float value) {
             this.interpolate(value, this.interpolationSpeed);
         }
+
         public void interpolate(double value) {
             this.interpolate(value, this.interpolationSpeed);
         }
+
         public void interpolate() {
             this.set(MathHelper.lerp(interpolationSpeed, currentValue, defaultValue));
         }

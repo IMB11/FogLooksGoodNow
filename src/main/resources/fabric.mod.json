@@ -14,7 +14,7 @@
     "website": "https://imb11.dev/",
     "repo": "https://github.com/imb11/FogLooksGoodNow"
   },
-  "license": "CC-0",
+  "license": "ARR",
   "icon": "assets/foglooksgoodnow/icon.png",
   "environment": "client",
   "entrypoints": {

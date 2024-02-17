@@ -19,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-@Debug(export = true)
 @Mixin(BackgroundRenderer.class)
 public class FogRendererMixin {
     @Shadow private static float red;
@@ -57,10 +56,6 @@ public class FogRendererMixin {
             fogData.fogStart = viewDistance * fogManager.fogStart.get(tickDelta);
             fogData.fogEnd = viewDistance * (fogManager.fogEnd.get(tickDelta) * fogManager.fogStartRain.get(tickDelta)) * undergroundFogMultiplier;
             fogData.fogShape = FogShape.SPHERE;
-
-            //RenderSystem.setShaderFogStart(viewDistance * fogManager.fogStart.get(tickDelta));
-            //RenderSystem.setShaderFogEnd(viewDistance * (fogManager.fogEnd.get(tickDelta) * fogManager.fogStartRain.get(tickDelta)) * undergroundFogMultiplier);
-            //RenderSystem.setShaderFogShape(FogShape.SPHERE);
         }
     }
 }

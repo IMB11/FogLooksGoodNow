@@ -1,0 +1,27 @@
+{
+  "flgn.config.surface": "平面迷雾",
+
+  "flgn.config.fogStart.name": "迷雾起始点",
+  "flgn.config.fogStart.desc": "从玩家位置到迷雾起始点的距离百分比。\n\n实际距离取决于该百分数与渲染距离相乘。",
+  "flgn.config.fogDensity.name": "迷雾能见度",
+  "flgn.config.fogDensity.desc": "雾的密度——不透明度。",
+
+  "flgn.config.fogStartRain.name": "下雨起始点倍增",
+  "flgn.config.fogStartRain.desc": "下雨时要倍增的起始点量。",
+  "flgn.config.fogDensityRain.name": "下雨能见度倍增",
+  "flgn.config.fogDensityRain.desc": "下雨时要倍增的能见度量。",
+
+  "flgn.config.cave": "洞穴迷雾",
+
+  "flgn.config.enableCaveFog.name": "启用洞穴迷雾",
+  "flgn.config.enableCaveFog.desc": "是否启用洞穴迷雾修改。",
+  "flgn.config.caveFogColor.name": "洞穴迷雾颜色",
+  "flgn.config.caveFogColor.desc": "在洞穴中迷雾的颜色",
+  "flgn.config.caveFogDensity.name": "洞穴迷雾能见度",
+  "flgn.config.caveFogDensity.desc": "洞穴迷雾的密度——不透明度。",
+
+  "flgn.config.global": "全局设置",
+
+  "flgn.config.disableAll.name": "禁用所有功能",
+  "flgn.config.disableAll.desc": "禁用所有来自 Fog Looks Good Now 的更改，在希望暂时禁用更改或对比更改先后效果的情况下很有用。"
+}

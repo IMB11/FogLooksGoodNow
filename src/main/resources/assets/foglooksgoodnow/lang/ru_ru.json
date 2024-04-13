@@ -1,0 +1,27 @@
+{
+  "flgn.config.surface": "Поверхностный туман",
+
+  "flgn.config.fogStart.name": "Начало тумана",
+  "flgn.config.fogStart.desc": "Процентное расстояние от камеры, на котором начинается туман.\n\nФактическое значение расстояния до начала тумана равно этому проценту, умноженному на расстояние рендеринга.",
+  "flgn.config.fogDensity.name": "Видимость в тумане",
+  "flgn.config.fogDensity.desc": "Плотность тумана — насколько он непрозрачен.",
+
+  "flgn.config.fogStartRain.name": "Множитель начала дождя",
+  "flgn.config.fogStartRain.desc": "Количество, на которое нужно умножить количество тумана, начиная с момента, когда идёт дождь.",
+  "flgn.config.fogDensityRain.name": "Коэффициент видимости при дожде и тумане",
+  "flgn.config.fogDensityRain.desc": "Количество, на которое нужно умножить плотность тумана во время дождя.",
+
+  "flgn.config.cave": "Пещерный туман",
+
+  "flgn.config.enableCaveFog.name": "Включить пещерный туман",
+  "flgn.config.enableCaveFog.desc": "Следует ли включать модификации пещерного тумана.",
+  "flgn.config.caveFogColor.name": "Цвет пещерного тумана",
+  "flgn.config.caveFogColor.desc": "Цвет тумана в пещерах.",
+  "flgn.config.caveFogDensity.name": "Видимость в пещерном тумане",
+  "flgn.config.caveFogDensity.desc": "Плотность тумана в пещерах — насколько он непрозрачен.",
+
+  "flgn.config.global": "Глобальные параметры",
+
+  "flgn.config.disableAll.name": "Отключить все функции",
+  "flgn.config.disableAll.desc": "Отключает все модификации тумана, применяемые модом, полезно, если вы хотите временно отключить модификации тумана или провести сравнение до и после применения мода."
+}

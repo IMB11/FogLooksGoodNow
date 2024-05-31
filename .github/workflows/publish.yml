@@ -7,7 +7,7 @@ jobs:
   build:
     strategy:
       matrix:
-        game_version: ["1.20.1", "1.20.2", "1.20.4"]
+        game_version: ["1.20.6"]
     runs-on: "ubuntu-latest"
     steps:
       - name: Checkout Repository
@@ -22,7 +22,7 @@ jobs:
         with:
           distribution: temurin
           cache: gradle
-          java-version: 17
+          java-version: 21
       - run: chmod +x gradlew
       - name: Set Active Version
         run: ./gradlew "Set active version to ${{ matrix.game_version }}"

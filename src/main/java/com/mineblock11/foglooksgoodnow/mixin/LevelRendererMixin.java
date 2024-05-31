@@ -7,7 +7,6 @@ import com.mineblock11.foglooksgoodnow.render.CaveFogRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,11 +27,11 @@ public class LevelRendererMixin {
         FogManager.instance().close();
     }
 
-    @Inject(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At("TAIL"))
-    public void renderSky(MatrixStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean isFoggy, Runnable setupFog, CallbackInfo ci) {
+    @Inject(method = "renderSky(Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At("TAIL"))
+    public void renderSky(Matrix4f modelMatrix, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean isFoggy, Runnable setupFog, CallbackInfo ci) {
         if(FLGConfig.get().disableAll) return;
 
         MinecraftClient mc = MinecraftClient.getInstance();
-        CaveFogRenderer.renderCaveFog(mc.world, partialTick, poseStack, camera, projectionMatrix, isFoggy, setupFog);
+        CaveFogRenderer.renderCaveFog(mc.world, partialTick, modelMatrix, camera, projectionMatrix, isFoggy, setupFog);
     }
 }

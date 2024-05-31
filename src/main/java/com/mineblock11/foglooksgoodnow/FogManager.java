@@ -208,14 +208,16 @@ public class FogManager {
                 darknessValue = 1.0F;
             } else if (e.hasStatusEffect(StatusEffects.DARKNESS)) {
                 StatusEffectInstance effect = e.getStatusEffect(StatusEffects.DARKNESS);
-                if (!effect.getFactorCalculationData().isEmpty()) {
+                try {
                     float factor = this.client.options.getDarknessEffectScale().getValue().floatValue();
-                    float intensity = effect.getFactorCalculationData().get().lerp(e, mc.getLastFrameDuration()) * factor;
-                    float darkness = 1 - (calculateDarknessScale(e, effect.getFactorCalculationData().get().lerp(e, mc.getLastFrameDuration()), mc.getLastFrameDuration()));
+                    float intensity = effect.getFadeFactor(e, mc.getLastFrameDuration()) * factor;
+                    float darkness = 1 - (calculateDarknessScale(e, effect.getFadeFactor(e, mc.getLastFrameDuration()), mc.getLastFrameDuration()));
                     FogLooksGoodNow.LOGGER.info("" + intensity);
                     fogStart = ((8.0F * 16) / renderDistance) * darkness;
                     fogEnd = ((15.0F * 16) / renderDistance);
-                    darknessValue = effect.getFactorCalculationData().get().lerp(e, mc.getLastFrameDuration());
+                    darknessValue = effect.getFadeFactor(e, mc.getLastFrameDuration());
+                } catch (Exception no_status_data_exception) {
+                	
                 }
             }
         }

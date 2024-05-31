@@ -10,7 +10,6 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.CubicSampler;
 import net.minecraft.util.math.MathHelper;
@@ -18,10 +17,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.biome.source.BiomeAccess;
 import org.joml.Matrix4f;
 
-import java.awt.*;
-
 public class CaveFogRenderer {
-    public static void renderCaveFog(ClientWorld level, float partialTick, MatrixStack poseStack, Camera camera, Matrix4f projectionMatrix, boolean isFoggy, Runnable setupFog) {
+    public static void renderCaveFog(ClientWorld level, float partialTick, Matrix4f modelMatrix, Camera camera, Matrix4f projectionMatrix, boolean isFoggy, Runnable setupFog) {
         if (FogManager.shouldRenderCaveFog() && !IrisShadersCompat.isUsingShaders()) {
             FogManager fogManager = FogManager.instance();
 
@@ -34,7 +31,7 @@ public class CaveFogRenderer {
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
 
-            BufferBuilder bufferbuilder = Tessellator.getInstance().getBuffer();
+            BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
 
             RenderSystem.depthMask(false);
             RenderSystem.setShader(GameRenderer::getPositionColorProgram);
@@ -47,28 +44,27 @@ public class CaveFogRenderer {
             Vec3d skyFogColor = CubicSampler.sampleColor(samplePos, (x, y, z) -> level.getDimensionEffects().adjustFogColor(Vec3d.unpackRgb(biomemanager.getBiomeForNoiseGen(x, y, z).value().getFogColor()), timeOfDay));
 
             float radius = 5.0F;
-            renderCone(poseStack, bufferbuilder, 32, true, radius, -30.0F,
-                    (float) (fogColor.x), (float) (fogColor.y), (float) (fogColor.z ), undergroundFactor,
+            renderCone(modelMatrix, bufferBuilder, 32, true, radius, -30.0F,
+                    (float) (fogColor.x), (float) (fogColor.y), (float) (fogColor.z), undergroundFactor,
                     0.0F, (float) (fogColor.x * skyFogColor.x), (float) (fogColor.y * skyFogColor.y), (float) (fogColor.z * skyFogColor.z), undergroundFactor);
-            renderCone(poseStack, bufferbuilder, 32, false, radius, 30.0F,
-                    (float) (fogColor.x), (float) (fogColor.y), (float) (fogColor.z ), undergroundFactor * 0.2F,
+            renderCone(modelMatrix, bufferBuilder, 32, false, radius, 30.0F,
+                    (float) (fogColor.x), (float) (fogColor.y), (float) (fogColor.z), undergroundFactor * 0.2F,
                     0.0F, (float) (fogColor.x * skyFogColor.x), (float) (fogColor.y * skyFogColor.y), (float) (fogColor.z * skyFogColor.z), undergroundFactor);
 
             RenderSystem.depthMask(true);
         }
     }
 
-    private static void renderCone(MatrixStack poseStack, BufferBuilder bufferBuilder, int resolution, boolean normal, float radius, float topVertexHeight, float topR, float topG, float topB, float topA, float bottomVertexHeight, float bottomR, float bottomG, float bottomB, float bottomA) {
-        Matrix4f matrix = poseStack.peek().getPositionMatrix();
+    private static void renderCone(Matrix4f modelMatrix, BufferBuilder bufferBuilder, int resolution, boolean normal, float radius, float topVertexHeight, float topR, float topG, float topB, float topA, float bottomVertexHeight, float bottomR, float bottomG, float bottomB, float bottomA) {
         bufferBuilder.begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
-        bufferBuilder.vertex(matrix, 0.0F, topVertexHeight, 0.0F).color(topR, topG, topB, topA).next();
+        bufferBuilder.vertex(modelMatrix, 0.0F, topVertexHeight, 0.0F).color(topR, topG, topB, topA).next();
 
-        for(int vertex = 0; vertex <= resolution; ++vertex) {
-            float angle = (float)vertex * ((float)Math.PI * 2F) / ((float)resolution);
+        for (int vertex = 0; vertex <= resolution; ++vertex) {
+            float angle = (float) vertex * ((float) Math.PI * 2F) / ((float) resolution);
             float x = MathHelper.sin(angle) * radius;
             float z = MathHelper.cos(angle) * radius;
 
-            bufferBuilder.vertex(matrix, x, bottomVertexHeight, normal ? z : -z).color(bottomR, bottomG, bottomB, bottomA).next();
+            bufferBuilder.vertex(modelMatrix, x, bottomVertexHeight, normal ? z : -z).color(bottomR, bottomG, bottomB, bottomA).next();
         }
 
         BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());

@@ -15,7 +15,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class FLGConfig {
     private static final YACLHelper.NamespacedHelper HELPER = new YACLHelper.NamespacedHelper("foglooksgoodnow");
